@@ -12,7 +12,7 @@ const connectionRequestSchema = new mongoose.Schema({
         type:String,
         require:true,
         enum:{
-            values:["ignore" , "interested" , "accept" , "reject"],
+            values:["ignored" , "interested" , "accepted" , "rejected"],
             message:`{VALUE} is incorrect status type`,
         },
     },
@@ -32,7 +32,6 @@ connectionRequestSchema.pre("save",function(next){
     if(connectionRequest.fromUserId.equals(connectionRequest.toUserId)){
         throw new Error("Cant send request to your self😒")
     }
-    next();
 })
 
 const ConnectionRequestModel = new mongoose.model("ConnectionRequestModel",connectionRequestSchema);

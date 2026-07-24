@@ -4,9 +4,10 @@ const { userAuth } = require("../middlewares/auth");
 const ConnectionRequestModel = require("../models/connectionRequest");
 const User = require("../models/user");
 
-//here userAuth middleware act as a authentication ..
+//sending the connection request api
 requestRouter.post(
   "/request/send/:status/:toUserId",
+  //here userAuth middleware act as a authentication ..
   userAuth,
   async (req, res) => {
     try {
@@ -65,5 +66,39 @@ requestRouter.post(
     }
   },
 );
+
+//gets the connection request api
+requestRouter.post('/request/review/:status/:requestId',userAuth,async(req,res)=>{
+  try {
+    const loggedInUser = req.id
+    const {status,requestId} = req.params;
+
+    // checking valid status and requestId
+    const allowedStatus = ["accepted","rejected"]
+    if(!allowedStatus.includes(status)){
+      throw new Error("Status not allowed!!")
+    }
+    //finding connection in DB(connectionRequestSchema)
+    const connectionRequest = await ConnectionRequestModel.findOne({
+      _id:requestId,
+      toUserId:loggedInUser,
+      status:"interested",
+    })
+    //if not exist will throw error
+    if(!connectionRequest){
+      throw new Error("Connection Request not found.")
+    }
+    connectionRequest.status = status;
+    //saving the status (accepted or rejected)
+    const data = await connectionRequest.save();
+    res.status(200).json({
+      message:"Connection Request " +status,
+      data,
+    })
+  } catch (error) {
+    res.status(400).send("ERROR: "+ error.message);
+  }
+
+})
 
 module.exports = requestRouter;
