@@ -2,10 +2,12 @@ const mongoose = require('mongoose')
 const connectionRequestSchema = new mongoose.Schema({
     fromUserId:{
         type:mongoose.Schema.Types.ObjectId,
+        ref:"User", //reference to User collection model.
         require:true,
     },
     toUserId:{
         type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
         require:true,
     },
     status:{
@@ -18,7 +20,7 @@ const connectionRequestSchema = new mongoose.Schema({
     },
 },
 {
-    timestamp:true,
+    timestamps:true,
 }
 );
 
