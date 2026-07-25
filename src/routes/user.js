@@ -24,6 +24,31 @@ userRouter.get("/user/requests/received", userAuth, async(req, res) => {
   }
 });
 
+userRouter.get('/user/connections',userAuth,async(req,res)=>{
+  try {
+    const loggedInUserId = req.id;
+    const userConnections = await ConnectionRequestModel.find({
+      $or:[
+        {toUserId:loggedInUserId,status:"accepted"},
+        {fromUserId:loggedInUserId,status:"accepted"}
+      ]
+    })
+    .populate("fromUserId","firstName lastName photoUrl age gender skills")
+    .populate("toUserId","firstName lastName photoUrl age gender skills")
+    const data = userConnections.map((row)=>{
+      if(row.fromUserId.equals(loggedInUserId)){
+        return row.toUserId;
+      }
+      return row.fromUserId;
+    });
 
+    res.status(200).json({
+      message:"Data fetch successfull.",
+      data,
+    })
+  } catch (error) {
+    res.status(400).send("ERROR: "+error.message)
+  }
+})
 
 module.exports = userRouter;
