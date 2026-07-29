@@ -1,7 +1,10 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequestModel = require("../models/connectionRequest");
+const User = require("../models/user");
 const userRouter = express.Router();
+
+const USER_SAFE_DATA = "firstName lastName photoUrl age gender skills"
 
 userRouter.get("/user/requests/received", userAuth, async(req, res) => {
   try {
@@ -33,8 +36,8 @@ userRouter.get('/user/connections',userAuth,async(req,res)=>{
         {fromUserId:loggedInUserId,status:"accepted"}
       ]
     })
-    .populate("fromUserId","firstName lastName photoUrl age gender skills")
-    .populate("toUserId","firstName lastName photoUrl age gender skills")
+    .populate("fromUserId",USER_SAFE_DATA)
+    .populate("toUserId",USER_SAFE_DATA)
     const data = userConnections.map((row)=>{
       if(row.fromUserId.equals(loggedInUserId)){
         return row.toUserId;
@@ -49,6 +52,35 @@ userRouter.get('/user/connections',userAuth,async(req,res)=>{
   } catch (error) {
     res.status(400).send("ERROR: "+error.message)
   }
+})
+
+userRouter.get('/user/feed',userAuth,async(req,res)=>{
+ try {
+     const loggedInUser = req.id;
+  //will find the id's who is having connecton with the loggedin user either its fromUserId is loggedInUser or toUserId is loggedInUser.
+  const connectionRequests = await ConnectionRequestModel.find({
+    $or:[
+      {fromUserId:loggedInUser},
+      {toUserId:loggedInUser}
+    ]
+  }).select("fromUserId toUserId")
+
+  const hideUserFromFeed = new Set()  //set data structure used to avoid dublicate id
+  connectionRequests.forEach((req)=>{
+    hideUserFromFeed.add(req.fromUserId.toString())
+    hideUserFromFeed.add(req.toUserId.toString())
+  })
+  // console.log(hideUserFromFeed)
+  const users = await User.find({
+    $and:[
+      {_id:{$nin: Array.from(hideUserFromFeed)}} , // $nin stands for not in its a mongoose schema thing
+      {_id:{$ne:loggedInUser}} // $ne = not equal
+    ]
+  }).select(USER_SAFE_DATA) //select method used to select only  specific data u want to get and work from the User schema.
+  res.send(users)
+ } catch (error) {
+    res.status(400).send("ERROR : "+ error.message)
+ }
 })
 
 module.exports = userRouter;
