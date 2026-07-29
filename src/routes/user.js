@@ -54,9 +54,15 @@ userRouter.get('/user/connections',userAuth,async(req,res)=>{
   }
 })
 
-userRouter.get('/user/feed',userAuth,async(req,res)=>{
+//pagination concept to see only limited user at single time REMEMBER PAGINATION CONCEPT WORKS in GET API.
+userRouter.get('/feed',userAuth,async(req,res)=>{
  try {
-     const loggedInUser = req.id;
+      const page = parseInt(req.query.page) || 1;  //query means when url have ?page=1  and params /:page to clearify the difference 
+      let limit = parseInt(req.query.limit) || 10; //query means when url have  ?limit=10
+      //if someone(attacker) trys get limit =1000 or more so,
+      limit > 50 ? 50 :limit //if limit >50 then it will set limit =50 else if less the limit will what it has in query
+      const skip = (page-1)*limit; //formula to skip
+      const loggedInUser = req.id;
   //will find the id's who is having connecton with the loggedin user either its fromUserId is loggedInUser or toUserId is loggedInUser.
   const connectionRequests = await ConnectionRequestModel.find({
     $or:[
@@ -77,7 +83,9 @@ userRouter.get('/user/feed',userAuth,async(req,res)=>{
       {_id:{$ne:loggedInUser}} // $ne = not equal
     ]
   }).select(USER_SAFE_DATA) //select method used to select only  specific data u want to get and work from the User schema.
-  res.send(users)
+    .skip(skip) // mongodb provide skip method for pagination to skip the page
+    .limit(limit) // mongodb provide limit method for pagination to limit the page
+    res.send(users)
  } catch (error) {
     res.status(400).send("ERROR : "+ error.message)
  }
