@@ -91,7 +91,7 @@ const userSchema = new mongoose.Schema( //or we can write new schema({}) if we i
       validate: [
         {
           validator: (arr) => arr.length <= 10,
-          message: "message cannot be more than 10",
+          message: "skills cannot be more than 10",
         },
       ],
     },

@@ -4,7 +4,7 @@ const express = require("express");
 const validateSignUpData = (req) => {
   const { firstName, lastName, emailId, password } = req.body;
   if (!firstName || !lastName) {
-    throw new Error("Name is not valid");
+    throw new Error("Name is required");
   } else if (!validator.isEmail(emailId)) {
     throw new Error("Email is not valid");
   } else if (!validator.isStrongPassword(password)) {
@@ -88,7 +88,7 @@ const validateEditProfileData = (req) => {
     }
 
     if (data.skills.length > 10) {
-      throw new Error("You can add a maximum of 20 skills.");
+      throw new Error("You can add a maximum of 10 skills.");
     }
 
     const areAllStrings = data.skills.every(

@@ -23,10 +23,10 @@ authRouter.post("/signup", async (req, res) => {
     //2)Encrypt the password
     const passwordHash = await bcrypt.hash(password, 10);
     // console.log(passwordHash);
-    //real methord by giving req.body to User model instance as it contain json data and middleware converts into js obj.
+    //real method by giving req.body to User model instance as it contain json data and middleware converts into js obj.
     // const user = new User(req.body);
     
-    //but never EVER TRUST req.body so real methord is this instead of new user(reqq.body);
+    //but never EVER TRUST req.body so real method is this instead of new user(req.body);
 
     //3)new instance of User Model
     const user = new User({
