@@ -72,7 +72,7 @@ const userSchema = new mongoose.Schema( //or we can write new schema({}) if we i
         },
       },
       default:
-        "https://www.vectorstock.com/royalty-free-vectors/default-profile-vectors",
+        "https://avatars.githubusercontent.com/u/146703548?v=4",
     },
     about:{
       type:String,
@@ -99,7 +99,7 @@ const userSchema = new mongoose.Schema( //or we can write new schema({}) if we i
   { timestamps: true }, // it will create two fields created and updated at timestamp in the document automatically
 );
 
-
+// this are helper methods
 userSchema.methods.getJWT = async function(){
   //this refers to the current instances
   const  user = this

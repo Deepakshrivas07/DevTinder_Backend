@@ -64,7 +64,7 @@ authRouter.post("/login", async (req, res) => {
       const token = await user.getJWT()
       //adding token to cookie  and send it to the user so that when user make a req for /profile etc server can authenticate
       res.cookie("token", token,{expires: new Date(Date.now() + 8 * 36000000)});
-      res.status(200).send("Login Successfull.");
+      res.status(200).send(user);
     }
   } catch (error) {
     res.status(400).send("ERROR: " + error.message);

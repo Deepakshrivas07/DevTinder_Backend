@@ -11,7 +11,7 @@ userRouter.get("/user/requests/received", userAuth, async(req, res) => {
     const userRequests = await ConnectionRequestModel.find({
       toUserId: req.id, //req.id from userAuth
       status: "interested",
-    }).populate("fromUserId","firstName lastName photoUrl age gender skills");
+    }).populate("fromUserId",USER_SAFE_DATA);
       //populate and ref use to make relation btwn to schema ref used in UserSchema model and 
       //populate used to take that get the info from User schema.populate is like a foreign key
 

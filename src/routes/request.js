@@ -22,7 +22,7 @@ requestRouter.post(
       //   throw new Error("Cant send request to your self😒")
       // }
 
-      //checking whether userid to whom we are sending exist or not in your database 🤣.
+      //checking whether userid to whom we are sending, exist or not in our database 🤣.
       const toUser = await User.findById(toUserId);
       if(!toUser){
           throw new Error("User Don't exist in Database")

@@ -40,7 +40,7 @@ profileRouter.patch("/profile/password", userAuth, async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.findByIdAndUpdate(
       userId,
-      { password: hashedPassword },
+      { password: hashedPassword }, //extract the password from the request body and hash it before updating the user document in the database.
       {
         // returnDocument: "after", i was written i older version now  we use new:true
         returnDocument:"after",
