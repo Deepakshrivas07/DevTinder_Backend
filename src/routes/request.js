@@ -79,6 +79,9 @@ requestRouter.post('/request/review/:status/:requestId',userAuth,async(req,res)=
       throw new Error("Status not allowed!!")
     }
     //finding connection in DB(connectionRequestSchema)
+    console.log(requestId)
+    console.log(loggedInUser)
+    console.log(status)
     const connectionRequest = await ConnectionRequestModel.findOne({
       _id:requestId,
       toUserId:loggedInUser,

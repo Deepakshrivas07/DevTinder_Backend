@@ -8,7 +8,8 @@ const USER_SAFE_DATA = "firstName lastName photoUrl about age gender skills"
 
 userRouter.get("/user/requests/received", userAuth, async(req, res) => {
   try {
-    const userRequests = await ConnectionRequestModel.find({
+    const loggedInUser = req.id
+    const connectionRequests = await ConnectionRequestModel.find({
       toUserId: req.id, //req.id from userAuth
       status: "interested",
     }).populate("fromUserId",USER_SAFE_DATA);
@@ -16,11 +17,11 @@ userRouter.get("/user/requests/received", userAuth, async(req, res) => {
       //populate used to take that get the info from User schema.populate is like a foreign key
 
     //using map over userRequest to get the exact data of user else it give the whole object of connection  
-    const data = userRequests.map((row)=>row.fromUserId);
+    // const data = userRequests.map((row)=>row.fromUserId);
 
     res.status(200).json({
       message: "Data Retrived Successfully.",
-      data,
+      data:connectionRequests,
     });
   } catch (error) {
     res.status(400).send("ERROR: " + error.message);

@@ -56,10 +56,6 @@ const validateEditProfileData = (req) => {
   }
 
   // Validate age
-  console.log("Age:", data.age);
-  console.log("isInteger:", Number.isInteger(data.age));
-  console.log("Less than 1:", data.age < 1);
-  console.log("Greater than 90:", data.age > 90);
   if (
     data.age !== undefined &&
     (!Number.isInteger(data.age) || data.age < 1 || data.age > 90)

@@ -77,6 +77,8 @@ const userSchema = new mongoose.Schema( //or we can write new schema({}) if we i
       type:String,
       minLength:10,
       maxLength:100,
+      default:"Hey there! I am using DevTinder",
+      trim:true
     },
     skills: {
       type: [
