@@ -20,6 +20,7 @@ const validateLogInData = (req) => {
 
 const validateEditProfileData = (req) => {
   const data = req.body;
+
   const allowedEditFields = [
     "firstName",
     "lastName",
@@ -29,9 +30,11 @@ const validateEditProfileData = (req) => {
     "about",
     "skills",
   ];
+
   const isAllowed = Object.keys(data).every((key) =>
     allowedEditFields.includes(key),
   );
+
   if (!isAllowed) {
     throw new Error("Invalid update fields.");
   }
@@ -39,7 +42,7 @@ const validateEditProfileData = (req) => {
   // Validate firstName
   if (
     data.firstName !== undefined &&
-    (typeof data.firstName !== "string" || data.firstName.trim() === "")
+    (typeof data.firstName !== "string" || data.firstName.trim().length === 0)
   ) {
     throw new Error("Please enter a valid first name.");
   }
@@ -47,12 +50,16 @@ const validateEditProfileData = (req) => {
   // Validate lastName
   if (
     data.lastName !== undefined &&
-    (typeof data.lastName !== "string" || data.lastName.trim() === "")
+    (typeof data.lastName !== "string" || data.lastName.trim().length === 0)
   ) {
     throw new Error("Please enter a valid last name.");
   }
 
   // Validate age
+  console.log("Age:", data.age);
+  console.log("isInteger:", Number.isInteger(data.age));
+  console.log("Less than 1:", data.age < 1);
+  console.log("Greater than 90:", data.age > 90);
   if (
     data.age !== undefined &&
     (!Number.isInteger(data.age) || data.age < 1 || data.age > 90)
@@ -63,7 +70,8 @@ const validateEditProfileData = (req) => {
   // Validate gender
   if (
     data.gender !== undefined &&
-    !["male", "female", "other"].includes(data.gender.toLowerCase())
+    (typeof data.gender !== "string" ||
+      !["male", "female", "other"].includes(data.gender.toLowerCase()))
   ) {
     throw new Error("Gender must be male, female, or other.");
   }
@@ -71,15 +79,18 @@ const validateEditProfileData = (req) => {
   // Validate about
   if (
     data.about !== undefined &&
-    (typeof data.about !== "string" || data.about.length > 200)
+    (typeof data.about !== "string" || data.about.trim().length > 200)
   ) {
-    throw new Error("About must be less than 500 characters.");
+    throw new Error("About must be less than 200 characters.");
   }
 
-  // Validate PhotoUrl
-    if(data.photoUrl !== undefined && validator.isURL(data.photoUrl)){
-      throw new Error("Invalid photoUrl")
-    }
+  // Validate photoUrl
+  if (
+    data.photoUrl !== undefined &&
+    (typeof data.photoUrl !== "string" || !validator.isURL(data.photoUrl))
+  ) {
+    throw new Error("Invalid photoUrl.");
+  }
 
   // Validate skills
   if (data.skills !== undefined) {
@@ -92,7 +103,7 @@ const validateEditProfileData = (req) => {
     }
 
     const areAllStrings = data.skills.every(
-      (skill) => typeof skill === "string" && skill.trim() !== "",
+      (skill) => typeof skill === "string" && skill.trim().length > 0,
     );
 
     if (!areAllStrings) {
@@ -103,21 +114,23 @@ const validateEditProfileData = (req) => {
   return true;
 };
 
-const validateForgotPasswordData = function(req){
-  const data = req.body
-  const allowedField = ["password"]
-  const isallowed = Object.keys(data).every((key)=>allowedField.includes(key))
-  if(!isallowed){
-    throw new Error("Only password is allowed to update.")
+const validateForgotPasswordData = function (req) {
+  const data = req.body;
+  const allowedField = ["password"];
+  const isallowed = Object.keys(data).every((key) =>
+    allowedField.includes(key),
+  );
+  if (!isallowed) {
+    throw new Error("Only password is allowed to update.");
   }
-  if(!data.password){
+  if (!data.password) {
     throw new Error("Password is required.");
   }
-  if(!validator.isStrongPassword(data.password)){
+  if (!validator.isStrongPassword(data.password)) {
     throw new Error("Pls Enter Strong Password!!");
   }
   return true;
-}
+};
 
 module.exports = {
   validateSignUpData,

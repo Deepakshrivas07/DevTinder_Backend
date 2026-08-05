@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt')
-const { default: isURL } = require("validator/lib/isURL");
 const userSchema = new mongoose.Schema( //or we can write new schema({}) if we import const {schema} = mongoose
   { 
     firstName: {
@@ -46,7 +45,7 @@ const userSchema = new mongoose.Schema( //or we can write new schema({}) if we i
     age: {
       type: Number,
       min: 18,
-      trim: true,
+      trime: true,
     },
     gender: {
       type: String,
@@ -66,7 +65,7 @@ const userSchema = new mongoose.Schema( //or we can write new schema({}) if we i
       type: String,
       validate: {
         validator(value) {
-          if (!isURL(value)) {
+          if (!validator.isURL(value)) {
             throw new Error("Invalid Photo URL: " + value);
           }
         },
@@ -112,7 +111,7 @@ userSchema.methods.validatePassword = async function(inputPassword){
   const passwordHashed = user.password;
   const isPasswordValid = await bcrypt.compare(inputPassword, passwordHashed)
   return isPasswordValid;
-}
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

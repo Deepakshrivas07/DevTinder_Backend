@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { validateSignUpData, validateLogInData } = require("../utils/validation");
 const { userAuth } = require("../middlewares/auth");
-
 authRouter.post("/signup", async (req, res) => {
   // this was for learning perpose(static methord)
   // const userObj = {
@@ -55,7 +54,7 @@ authRouter.post("/login", async (req, res) => {
     }
     //isPaswordValid and getJWT functions are helper function defined at the Schema level because this is more closer to the user and doing this is a production level thing ans also it makes thing reuseable.
     //isPasswordValid is a helper function
-    const isPasswordValid = user.validatePassword(password)
+    const isPasswordValid = await user.validatePassword(password)
     if (!isPasswordValid) {
       throw new Error("INVALID CRADENTIAL");
     } else {

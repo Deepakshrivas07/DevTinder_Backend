@@ -5,7 +5,7 @@ const userAuth = async (req, res, next) => {
     const cookie = req.cookies;
     const { token } = cookie;
     if(!token){
-        throw new Error("Token not valid!!");
+        return res.status(401).send("Please Login First");
     }
     const decodedMessage = await jwt.verify(token, "Dev@Tinder$790");
     // console.log(decodedMessage);//this will give us the _id of the user who is logged in. In an object format like this { _id: '64a0e3f5c7b1c2d3e4f5g6h7', iat: 1689000000 } 

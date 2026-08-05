@@ -25,10 +25,9 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
       returnDocument: "after",
       runValidators: true,
     });
-    await user.save();
-    res.status(200).send("Edited successfully");
+    res.status(200).send(user);
   } catch (error) {
-    res.send("ERROR: " + error.message);
+    res.status(400).send("ERROR: " + error.message);
   }
 });
 
