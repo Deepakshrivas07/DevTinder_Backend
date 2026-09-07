@@ -4,6 +4,8 @@ const userAuth = async (req, res, next) => {
   try {
     const cookie = req.cookies;
     const { token } = cookie;
+    //or
+    // const token = cookie.token
     if(!token){
         return res.status(401).send("Please Login First");
     }
