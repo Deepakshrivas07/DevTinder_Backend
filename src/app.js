@@ -23,7 +23,8 @@ app.use("/",profileRouter);
 app.use("/",requestRouter);
 app.use("/",userRouter);
 
-//we are listening to the server after connecting to the database (best practice).
+
+//we are listening to the server after connecting to the database (best practice)...
 connectDB()
   .then(() => {
     console.log("Database connection establishted");
